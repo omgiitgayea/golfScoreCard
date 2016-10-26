@@ -20,10 +20,10 @@ body, html
     overflow: hidden;
 }
 
-#pro, #champion, #men, #women
+.tees
 {
     width: 100%;
-    height: 20px;
+    height: 30px;
 }
 #pro
 {
