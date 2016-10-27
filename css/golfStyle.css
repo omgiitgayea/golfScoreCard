@@ -5,18 +5,46 @@ body, html
     height: 100%;
 }
 
+body
+{
+    background-image: url("../images/golfHole.gif");
+    background-position: bottom;
+    background-size: cover;
+    overflow: hidden;
+
+}
+#cardHeader
+{
+    width: 90%;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    margin: 20px auto;
+    padding: 5px;
+    background-color: rgba(240, 140, 2, 0.8);
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    font-family: 'Proza Libre', sans-serif;
+    box-sizing: border-box;
+}
 #mainContainer
 {
     width: 90%;
-    height: 100%;
-    margin: 0 auto;
+    min-height: 60%;
+    margin: 0px auto;
+    background-image: url("../images/hawaiiGolf2.jpg");
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    box-shadow: 10px 10px 10px black;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 #teesContainer
 {
     width: 100%;
     border-radius: 5px;
-    box-shadow: 4px 4px 4px black;
     overflow: hidden;
 }
 
