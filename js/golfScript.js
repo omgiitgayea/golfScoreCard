@@ -1,7 +1,13 @@
 /**
  * Created by GodaiYuusaku on 10/26/16.
  */
-var TEES_ALPHA = 0.8;
+
+
+var ScoreCard = function ()
+{
+    var TEES_ALPHA = 0.8;
+}
+
 
 // actual code will almost certainly create the #pro id, but at the very least should get a color for it that needs to be changed to rgba
 $("#pro").css("background-color", hexToRgba("#443C30"));
