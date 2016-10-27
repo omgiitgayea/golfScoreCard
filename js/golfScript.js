@@ -6,6 +6,11 @@
 var ScoreCard = function ()
 {
     var TEES_ALPHA = 0.8;
+
+    function initCard()
+    {
+        // do what's hard coded currently (10/27/2016) in index.html
+    }
 }
 
 
@@ -32,3 +37,6 @@ function hexToRgba(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return "rgba(" + parseInt(result[1], 16) + ", " + parseInt(result[2], 16) + ", " + parseInt(result[3], 16) + ", " + TEES_ALPHA + ")";
 }
+
+
+// $("#whatever").append("<div>Player" + (i + 1) + "</div") - if using a for loop to make a generic player
