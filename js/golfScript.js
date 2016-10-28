@@ -6,11 +6,10 @@ var MAX_PLAYERS = 10;
 var courseData = null;
 var numPlayers = 0;
 var players = [];
+var addedPlayers = 0;
 
 function initCard() {
     // place the holes header on the screen
-
-
     var roundBegun = false;
     var holeHeader = "<header id='holeHeader'>HOLES</header>";
     var currentTee = "";
@@ -51,7 +50,7 @@ function initCard() {
             roundBegun = true;
             $("#startRound").remove();
             $(".tees").css("cursor", "default");
-            $("#newPlayerBtn").remove();
+            $("#newPlayerDiv").remove();
             $(".removePlayerBtn").remove();
         }
         else {
@@ -68,7 +67,7 @@ $("#courseSelectBtn").click(function () {
             $("#courseSelectBtn").remove();
             $("#loading").remove();
 
-            var newPlayer = "<button id='newPlayerBtn'>Add new player</button>";
+            var newPlayer = "<div id='newPlayerDiv'><input type='number' id='playerNumbers' min='1' max='10' value='1'><button id='newPlayerBtn'>Add player(s)</button><span id='invalidPlayersMsg'></span></div>";
             var scoreContainer = "<div id='scoreCard'></div>";
             var courseName = "<div id='courseContainer'>" + courseData.course.name + "</div>";
             var cardContainer = "<div id='teesContainer'></div>";
@@ -76,35 +75,29 @@ $("#courseSelectBtn").click(function () {
             $("#scoreCard").append(newPlayer);
 
             $("#newPlayerBtn").click(function () {
-                if (players.length === 0)
+                var addnPlayers = $("#playerNumbers").val();
+
+                if (addnPlayers > 0 && (Number(addnPlayers) + players.length) <= 10)
                 {
-                    $("#teesContainer").css("display", "inline-block");
-                    initCard();
+                    $("#invalidPlayersMsg").html("");
+                    if (players.length <= 0) {
+                        $("#teesContainer").css("display", "inline-block");
+                        initCard();
+                    }
+                    addPlayer(Number(addnPlayers));
                 }
-                $("#scoreCard").prepend(addPlayer(players));
-                if (players.length >= MAX_PLAYERS)
+                else if (addnPlayers <= 0)
                 {
-                    $("#newPlayerBtn").css("display", "none");
+                    $("#invalidPlayersMsg").html("At least one player must play...");
+                }
+                else if ((Number(addnPlayers) + players.length) > 10)
+                {
+                    $("#invalidPlayersMsg").html("Only 10 players can play at a time");
                 }
 
+                $("#playerNumbers").val("1");
 
-                // need to rejigger the remove part
-                // $(".removePlayerBtn").click(function () {
-                //     var arrayIndex = $(this).parent().attr("id");
-                //     arrayIndex = Number(arrayIndex[arrayIndex.length - 1]) - 1;
-                //
-                //     players.splice(arrayIndex, 1);
-                //     $(this).parent().remove();
-                //     console.log(players.length);
-                //
-                //     // numPlayers--;
-                //     // console.log(numPlayers);
-                //     // $(this).parent().remove();
-                //     // if (numPlayers === 0) {
-                //     //     $("#teesContainer").html("");
-                //     //     $("#startRound").remove();
-                //     // }
-                // });
+
             });
 
         });
@@ -112,11 +105,69 @@ $("#courseSelectBtn").click(function () {
 
 });
 
-function addPlayer(playerArray)
+function addPlayer(morePlayers)
 {
-    var arrayLength = playerArray.length + 1;
-    playerArray.push("Player " + arrayLength);
-    return "<div id='Player" + arrayLength + "'>Player " + arrayLength + " <span class='removePlayerBtn'>&times;</span></div>";
+    $("#playerModal").css("display", "block");
+    $("#modalContent").html("Enter Player Names:");
+    for (var i = 0; i < morePlayers; i++) {
+        var nameInput = "<input type='text' id='newPlayer" + i + "' class='nameInputField'>";
+        $("#modalContent").append(nameInput);
+    }
+    $("#modalContent").slideDown();
+
+    var btnText = "Add Player";
+    if (morePlayers > 1)
+    {
+        btnText += "s"
+    }
+    $("#playerSubmitBtn").html(btnText);
+
+    $("#playerSubmitBtn").unbind().click(function () {
+        var valid = true;
+        var compInputs = [];
+        for (var i = 0; i < morePlayers; i++) {
+            var playerInput = $("#newPlayer" + i);
+            if (playerInput.val() === null || $.trim(playerInput.val()) === "" || (players.indexOf(playerInput.val()) != -1 && players.length > 0))
+            {
+                valid = false;
+                playerInput.val("");
+                playerInput.css("border-color", "red");
+                playerInput.css("background-color", "pink");
+            }
+            if (compInputs.indexOf(playerInput.val()) != -1 && compInputs.length > 0)
+            {
+                valid = false;
+                playerInput.val("");
+                playerInput.css("border-color", "red");
+                playerInput.css("background-color", "pink");
+            }
+            if (playerInput.val != "") {
+                compInputs.push(playerInput.val());
+            }
+        }
+        compInputs = [];
+
+        if (valid) {
+            $("#playerModal").css("display", "none");
+            for (var i = 0; i < morePlayers; i++) {
+                players.push($("#newPlayer" + i).val());
+                var playerField = "<div id='player" + (i + addedPlayers) + "'>" + $('#newPlayer' + i).val() + "<span class='removePlayerBtn'><i class='fa fa-minus-circle'></i></span></div>";
+                $("#scoreCard").append(playerField);
+            }
+            addedPlayers += morePlayers;
+        }
+
+        $(".removePlayerBtn").unbind().click(function () {
+            var gonePlayerName = $(this).parent().text();
+            players.splice(players.indexOf(gonePlayerName), 1);
+            $(this).parent().remove();
+            if (players.length === 0)
+            {
+                $("#teesContainer").html("");
+                $("#startRound").remove();
+            }
+        });
+    });
 }
 
 

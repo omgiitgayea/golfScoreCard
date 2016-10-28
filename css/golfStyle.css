@@ -8,10 +8,10 @@ body, html
 body
 {
     background-image: url("../images/golfHole.gif");
-    background-position: bottom;
-    background-size: cover;
-    overflow: hidden;
+    background-position: top;
     font-family: 'Josefin Sans', sans-serif;
+    box-sizing: border-box;
+    padding-top: 20px;
 }
 #cardHeader
 {
@@ -19,7 +19,7 @@ body
     text-align: center;
     font-size: 30px;
     color: white;
-    margin: 20px auto;
+    margin: 0px auto 20px auto;
     padding: 5px;
     background-color: rgba(240, 140, 2, 0.8);
     border-radius: 5px;
@@ -82,7 +82,11 @@ body
 {
     cursor: pointer;
 }
-
+.removePlayerBtn
+{
+    color: red;
+    padding-left: 5px;
+}
 #courseContainer
 {
     text-align: center;
@@ -126,4 +130,44 @@ body
     position: absolute;
     bottom: 10px;
     text-align: center;
+}
+
+#playerModal
+{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    padding: 50px;
+}
+
+#modalContent
+{
+    margin: 0px auto;
+    padding: 20px;
+    width: 50%;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 10px;
+    display: none;
+}
+
+.nameInputField
+{
+    display: block;
+}
+
+#btnDiv
+{
+    text-align: center;
+}
+
+.nameInputField
+{
+    border-radius: 20px;
+    padding: 5px;
 }
