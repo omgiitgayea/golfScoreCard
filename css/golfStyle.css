@@ -57,25 +57,13 @@ body
 .tees, #holeHeader
 {
     width: 100%;
-    height: 30px;
     padding: 5px;
     box-sizing: border-box;
 }
-#pro
+
+.tees
 {
-    background-color: #443C30;
-}
-#champion
-{
-    background-color: #6e869e;
-}
-#men
-{
-    background-color: #ffffff;
-}
-#women
-{
-    background-color: #ff0000;
+    cursor: pointer;
 }
 
 #scoreCard

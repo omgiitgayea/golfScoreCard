@@ -1,36 +1,63 @@
 /**
  * Created by GodaiYuusaku on 10/26/16.
  */
+var TEES_ALPHA = 0.8;           // the alpha for the tee rows
 
+function initCard() {
+    // place the holes header on the screen
+    var roundBegun = false;
+    var holeHeader = "<header id='holeHeader'>I'm where the titles go!</header>";
+    var currentTee = "";
+    $("#teesContainer").append(holeHeader);
 
-var ScoreCard = function ()
-{
-    var TEES_ALPHA = 0.8;
+    // get the tee type, tee color and add them to the screen (as it is now, I may have to put far too much code in this getJSON function)
+    $.getJSON("https://golf-courses-api.herokuapp.com/courses/11819", function (data) {
+        for (var i = 0; i < data.course.tee_types.length; i++) {
+            var teeID = data.course.tee_types[i].tee_type;              // get the name of the tee type
+            var tee = "<div id='"+ teeID + "' class='tees'></div>";     // creates a div with the id teeID and class tees
+            $("#teesContainer").append(tee);
+            $("#" + teeID).html(teeID);
+            $("#" + teeID).css("background-color", hexToRgba(data.course.tee_types[i].tee_hex_color));
+        }
 
-    function initCard()
-    {
-        // do what's hard coded currently (10/27/2016) in index.html
-    }
+        var scoreContainer = "<div id='scoreCard'></div>";
+        $("#teesContainer").append(scoreContainer);
+        $("#mainContainer").append("<div id='startRound'><button id='roundStart'>Begin Round</button><span id='missingTeeType'></span></div>");
+
+        $(".tees").click(function () {
+            if (!roundBegun) {
+                $("#missingTeeType").html("");
+                $(".tees").slideToggle();
+                $(this).stop();
+                if (currentTee === "")
+                {
+                    currentTee = $(this).attr("id");
+                }
+                else {
+                    currentTee = "";
+                }
+            }
+        });
+
+        $("#roundStart").click(function ()
+        {
+            if(currentTee != "") {
+                roundBegun = true;
+                $("#startRound").remove();
+                $(".tees").css("cursor", "default");
+            }
+            else
+            {
+                $("#missingTeeType").html("Please select your tee");
+            }
+        })
+    });
 }
 
-
-// actual code will almost certainly create the #pro id, but at the very least should get a color for it that needs to be changed to rgba
-$("#pro").css("background-color", hexToRgba("#443C30"));
-$("#champion").css("background-color", hexToRgba("#6e869e"));
-$("#men").css("background-color", hexToRgba("#ffffff"));
-$("#women").css("background-color", hexToRgba("#ff0000"));
-
-$(".tees").click(function () {
-    $(".tees").slideToggle();
-    $(this).stop();
+$("#justAButton").click(function () {
+    $("#justAButton").remove();
+    initCard();
 });
-
-
-
-
-
-
-
 
 // for changing hex color to rgba color
 function hexToRgba(hex) {
