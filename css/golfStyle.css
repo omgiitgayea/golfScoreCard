@@ -39,8 +39,17 @@ body
     box-shadow: 10px 10px 10px black;
     padding: 10px;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
 }
 
+#loading
+{
+    display: none;
+    color: blueviolet;
+    text-shadow: 1px 1px 1px black;
+    text-align: center;
+}
 #holeHeader
 {
     background-color: darkgreen;
@@ -54,13 +63,19 @@ body
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
-.tees, #holeHeader
+.tees, #holeHeader, #parValues
 {
     width: 100%;
     padding: 5px;
     box-sizing: border-box;
+    font-weight: bold;
 }
 
+#parValues
+{
+    background-color: rgba(125, 54, 45, 0.8);
+    color: aliceblue;
+}
 .tees
 {
     cursor: pointer;
@@ -70,6 +85,31 @@ body
 {
     width: 100%;
     padding: 5px;
+    margin-top: 10px;
     min-height: 300px;
     background-color: white;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+#startRound
+{
+    margin-top: 20px;
+    text-align: center;
+}
+#missingTeeType
+{
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 2px 2px 2px black;
+}
+
+#courseSelectBtn
+{
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
 }
