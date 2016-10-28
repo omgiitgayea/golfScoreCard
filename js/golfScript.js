@@ -2,13 +2,14 @@
  * Created by GodaiYuusaku on 10/26/16.
  */
 var TEES_ALPHA = 0.8;           // the alpha for the tee rows
+var MAX_PLAYERS = 10;
 var courseData = null;
 var numPlayers = 0;
+var players = [];
 
 function initCard() {
     // place the holes header on the screen
-    var cardContainer = "<div id='teesContainer'></div>";
-    $("#mainContainer").prepend(cardContainer);
+
 
     var roundBegun = false;
     var holeHeader = "<header id='holeHeader'>HOLES</header>";
@@ -29,8 +30,6 @@ function initCard() {
     var parContainer = "<div id='parValues'>PAR</div>";
     $("#teesContainer").append(parContainer);
 
-    // var scoreContainer = "<div id='scoreCard'></div>";
-    // $("#mainContainer").append(scoreContainer);
     $("#mainContainer").append("<div id='startRound'><button id='roundStart'>Begin Round</button><div id='missingTeeType'></div></div>");
 
     $(".tees").click(function () {
@@ -52,6 +51,8 @@ function initCard() {
             roundBegun = true;
             $("#startRound").remove();
             $(".tees").css("cursor", "default");
+            $("#newPlayerBtn").remove();
+            $(".removePlayerBtn").remove();
         }
         else {
             $("#missingTeeType").html("Please select your tee");
@@ -61,33 +62,62 @@ function initCard() {
 
 $("#courseSelectBtn").click(function () {
     $("#loading").show();
-    setTimeout(function () {
+    // setTimeout(function () {            // setTimeout is only there for testing of loading animation
         $.getJSON("https://golf-courses-api.herokuapp.com/courses/11819", function (data) {
             courseData = data;
             $("#courseSelectBtn").remove();
             $("#loading").remove();
 
-            var addPlayer = "<button id='newPlayerBtn'>Add new player</button>";
+            var newPlayer = "<button id='newPlayerBtn'>Add new player</button>";
             var scoreContainer = "<div id='scoreCard'></div>";
-            $("#mainContainer").append(scoreContainer);
-            $("#scoreCard").append(addPlayer);
-            // initCard();
+            var courseName = "<div id='courseContainer'>" + courseData.course.name + "</div>";
+            var cardContainer = "<div id='teesContainer'></div>";
+            $("#mainContainer").append(courseName, cardContainer, scoreContainer);
+            $("#scoreCard").append(newPlayer);
 
             $("#newPlayerBtn").click(function () {
-                if (numPlayers === 0)
+                if (players.length === 0)
                 {
+                    $("#teesContainer").css("display", "inline-block");
                     initCard();
                 }
-                numPlayers++
+                $("#scoreCard").prepend(addPlayer(players));
+                if (players.length >= MAX_PLAYERS)
+                {
+                    $("#newPlayerBtn").css("display", "none");
+                }
 
+
+                // need to rejigger the remove part
+                // $(".removePlayerBtn").click(function () {
+                //     var arrayIndex = $(this).parent().attr("id");
+                //     arrayIndex = Number(arrayIndex[arrayIndex.length - 1]) - 1;
+                //
+                //     players.splice(arrayIndex, 1);
+                //     $(this).parent().remove();
+                //     console.log(players.length);
+                //
+                //     // numPlayers--;
+                //     // console.log(numPlayers);
+                //     // $(this).parent().remove();
+                //     // if (numPlayers === 0) {
+                //     //     $("#teesContainer").html("");
+                //     //     $("#startRound").remove();
+                //     // }
+                // });
             });
 
         });
-    }, 1000);
+    // }, 1000);
 
 });
 
-
+function addPlayer(playerArray)
+{
+    var arrayLength = playerArray.length + 1;
+    playerArray.push("Player " + arrayLength);
+    return "<div id='Player" + arrayLength + "'>Player " + arrayLength + " <span class='removePlayerBtn'>&times;</span></div>";
+}
 
 
 
