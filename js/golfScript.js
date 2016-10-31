@@ -17,7 +17,7 @@ function initCard() {
 
     $("#teesContainer").append(holeHeader);
     for (var i = 0; i < courseHoles.length; i++) {
-        var holeNumDiv = "<div id='holeNo" + i + "' class='yardage'>" + (i + 1) + "</div>";
+        var holeNumDiv = "<div id='holeNo" + i + "' class='yardage hole'>" + (i + 1) + "</div>";
         $("#holeHeader").append(holeNumDiv);
         if (i % 9 === 8) {
             var holeLabel = "<div id='holeBreak" + Math.floor(i / 9) + "' class='yardage'></div>";
@@ -80,6 +80,7 @@ function initCard() {
             if (currentTee === "") {
                 currentTee = $(this).attr("id");
                 var teeIndex = teeArray.indexOf(currentTee);
+                var holePosArray = [];
 
                 //populate par and handicap
                 var parContainer = "<div id='parValues'><div class='headers'>PAR</div></div>";
@@ -94,6 +95,7 @@ function initCard() {
                         if (teeBoxObj === teeID) {
                             parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
                             hcpDiv += courseHoles[i].tee_boxes[k].hcp + "</div>";
+                            // insert code for pushing lat and lng to hole position array
                             break;
                         }
                     }
@@ -117,10 +119,17 @@ function initCard() {
                 $("#parValues").append(totalParHeader);
                 $("#hcpValues").append(totalHcp);
 
+                $(".hole").click(function ()
+                {
+                    var holeIndex = $(this).attr("id").slice(6);
+                    // insert code for showing maps modal
+                });
             }
             else {
                 currentTee = "";
                 $("#parValues").remove();
+                $("#hcpValues").remove();
+                $(".hole").off("click");
             }
         }
     });
@@ -333,7 +342,8 @@ function addPlayer(morePlayers) {
                         {
                             endGameMsg = "It looks like Charles Barkley was on the course today..."
                         }
-                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>Player" + playerID + " has a score of " + strokesPar + ". " + endGameMsg + "</div>";
+                        var playerName = $("#player" + playerID).children(".headers").html();
+                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of " + strokesPar + ". " + endGameMsg + "</div>";
                         $("#scoreCard").append(playerResult);
                     }
                 }
