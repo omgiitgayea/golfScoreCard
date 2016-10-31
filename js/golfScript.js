@@ -13,6 +13,7 @@ function initCard() {
     // place the holes header on the screen
     var holeHeader = "<header id='holeHeader'><div class='headers'>HOLES</div></header>";
     var courseHoles = courseData.course.holes;
+    var teeArray = [];
 
     $("#teesContainer").append(holeHeader);
     for (var i = 0; i < courseHoles.length; i++) {
@@ -35,6 +36,7 @@ function initCard() {
     // get the tee type, tee color and add them to the screen (as it is now, I may have to put far too much code in this getJSON function)
     for (var i = 0; i < courseData.course.tee_types.length; i++) {
         var teeID = courseData.course.tee_types[i].tee_type;              // get the name of the tee type
+        teeArray.push(teeID);
         var tee = "<div id='" + teeID + "' class='tees'><div class='headers'>" + teeID.toUpperCase() + "</div></div>";     // creates a div with the id teeID and class tees
         $("#teesContainer").append(tee);
         $("#" + teeID).css("background-color", hexToRgba(courseData.course.tee_types[i].tee_hex_color));
@@ -66,25 +68,25 @@ function initCard() {
             $(this).stop();
             if (currentTee === "") {
                 currentTee = $(this).attr("id");
-
+                var teeIndex = teeArray.indexOf(currentTee);
                 //add in par code
                 var parContainer = "<div id='parValues'><div class='headers'>PAR</div></div>";
                 $("#teesContainer").append(parContainer);
                 for (var i = 0; i < courseHoles.length; i++) {
-                    var parDiv = "<div id='par" + i + "' class='yardage'>" + 2000 + "</div>";
+                    var parDiv = "<div id='par" + i + "' class='yardage'>" + courseData.course.holes[i].tee_boxes[teeIndex].par + "</div>";
                     $("#parValues").append(parDiv);
                     if (i % 9 === 8) {
-                        var parBreakDIV = "<div id='parBreak" + Math.floor(i / 9) + "' class='yardage'>18000</div>";
-                        $("#parValues").append(parBreakDIV);
+                        var parBreakDIV = "<div id='parBreak" + Math.floor(i / 9) + "' class='yardage'>";
                         if (i === 8) {
-                            $("#parBreak").html("OUT");
+                            parBreakDIV += courseData.course.tee_types[teeIndex].front_nine_par + "</div>";
                         }
                         else {
-                            $("#parBreak").html("IN");
+                            parBreakDIV += courseData.course.tee_types[teeIndex].back_nine_par + "</div>";
                         }
+                        $("#parValues").append(parBreakDIV);
                     }
                 }
-                var totalParHeader = "<div id='totalPar' class='yardage'>36000</div>";
+                var totalParHeader = "<div id='totalPar' class='yardage'>" + courseData.course.tee_types[teeIndex].par + "</div>";
                 $("#parValues").append(totalParHeader);
 
             }
@@ -294,4 +296,7 @@ function hexToRgba(hex) {
 }
 
 
-// $("#whatever").append("<div>Player" + (i + 1) + "</div") - if using a for loop to make a generic player
+// what I still need: tabulate player's score, handicap row, final score relative to par and some message reflecting the score
+// what I need to do for the extra stuff: display a map of the hole with tee and hole position, find course within radius of app
+// UI stuff that needs doing: course selection page
+// yardage and par are wrong - order of tee types for the whole course is different in each hole - will have to find tee type in each hole and get appropriate values
