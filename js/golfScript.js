@@ -42,11 +42,9 @@ function initCard() {
         $("#" + teeID).css("background-color", hexToRgba(courseData.course.tee_types[i].tee_hex_color));
         for (var j = 0; j < courseHoles.length; j++) {
             var teeYardsDiv = "<div id='" + teeID + j + "' class='yardage'>";
-            for (var k = 0; k < courseHoles[j].tee_boxes.length; k++)
-            {
+            for (var k = 0; k < courseHoles[j].tee_boxes.length; k++) {
                 var teeBoxObj = courseHoles[j].tee_boxes[k].tee_type;
-                if (teeBoxObj === teeID)
-                {
+                if (teeBoxObj === teeID) {
                     teeYardsDiv += courseHoles[j].tee_boxes[k].yards + "</div>";
                     break;
                 }
@@ -84,11 +82,9 @@ function initCard() {
                 $("#teesContainer").append(parContainer);
                 for (var i = 0; i < courseHoles.length; i++) {
                     var parDiv = "<div id='par" + i + "' class='yardage'>"
-                    for (var k = 0; k < courseHoles[i].tee_boxes.length; k++)
-                    {
+                    for (var k = 0; k < courseHoles[i].tee_boxes.length; k++) {
                         var teeBoxObj = courseHoles[i].tee_boxes[k].tee_type;
-                        if (teeBoxObj === teeID)
-                        {
+                        if (teeBoxObj === teeID) {
                             parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
                             break;
                         }
@@ -290,14 +286,13 @@ function addPlayer(morePlayers) {
                     else {
                         $(this).val("");
                     }
-
-
-                    // rejigger for lets say readonly status to change for just the ones in that row, not sure how yet...or make it readonly when the final player does it, that's easier
-                    // if (roundFinished) {
-                    //     $(".scoreField").prop("readonly", true);
-                    //     $(".scoreField").css("border", "none");
-                    //     console.log("Yay, no more golf!");
-                    // }
+                    // use $("scoreCard).length to dynamically populate results table as each golfer finishes
+                    if (roundFinished) {
+                        var playerRow = $(this).parent().parent().attr("id");
+                        $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
+                        $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
+                        console.log("Yay, no more golf!");
+                    }
                 }
             }
             else {
