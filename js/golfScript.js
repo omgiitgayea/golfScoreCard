@@ -41,7 +41,16 @@ function initCard() {
         $("#teesContainer").append(tee);
         $("#" + teeID).css("background-color", hexToRgba(courseData.course.tee_types[i].tee_hex_color));
         for (var j = 0; j < courseHoles.length; j++) {
-            var teeYardsDiv = "<div id='" + teeID + j + "' class='yardage'>" + courseData.course.holes[j].tee_boxes[i].yards + "</div>";
+            var teeYardsDiv = "<div id='" + teeID + j + "' class='yardage'>";
+            for (var k = 0; k < courseHoles[j].tee_boxes.length; k++)
+            {
+                var teeBoxObj = courseHoles[j].tee_boxes[k].tee_type;
+                if (teeBoxObj === teeID)
+                {
+                    teeYardsDiv += courseHoles[j].tee_boxes[k].yards + "</div>";
+                    break;
+                }
+            }
             $("#" + teeID).append(teeYardsDiv);
             if (j % 9 === 8) {
                 var totalYrdsDiv = "<div id='" + teeID + "Total" + (j + 1) + "' class='yardage'>";
@@ -69,11 +78,21 @@ function initCard() {
             if (currentTee === "") {
                 currentTee = $(this).attr("id");
                 var teeIndex = teeArray.indexOf(currentTee);
+
                 //add in par code
                 var parContainer = "<div id='parValues'><div class='headers'>PAR</div></div>";
                 $("#teesContainer").append(parContainer);
                 for (var i = 0; i < courseHoles.length; i++) {
-                    var parDiv = "<div id='par" + i + "' class='yardage'>" + courseData.course.holes[i].tee_boxes[teeIndex].par + "</div>";
+                    var parDiv = "<div id='par" + i + "' class='yardage'>"
+                    for (var k = 0; k < courseHoles[i].tee_boxes.length; k++)
+                    {
+                        var teeBoxObj = courseHoles[i].tee_boxes[k].tee_type;
+                        if (teeBoxObj === teeID)
+                        {
+                            parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
+                            break;
+                        }
+                    }
                     $("#parValues").append(parDiv);
                     if (i % 9 === 8) {
                         var parBreakDIV = "<div id='parBreak" + Math.floor(i / 9) + "' class='yardage'>";
