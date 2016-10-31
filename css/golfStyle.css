@@ -65,14 +65,14 @@ body
     display: none;
 }
 
-.tees, #holeHeader, #parValues
+.tees, #holeHeader, #parValues, #hcpValues
 {
     width: 100%;
     box-sizing: border-box;
     font-weight: bold;
 }
 
-#parValues
+#parValues, #hcpValues
 {
     background-color: rgba(125, 54, 45, 0.8);
     color: aliceblue;
@@ -209,4 +209,9 @@ body
 {
     border-color: red;
     background-color: pink;
+}
+
+.scoreDisplay
+{
+    margin: 10px;
 }

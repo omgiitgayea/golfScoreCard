@@ -33,15 +33,19 @@ function initCard() {
     var totalHeader = "<div id='total' class='yardage'>TOTAL</div>";
     $("#holeHeader").append(totalHeader);
 
-    // get the tee type, tee color and add them to the screen (as it is now, I may have to put far too much code in this getJSON function)
+    // get the tee type, tee color and add them to the screen
     for (var i = 0; i < courseData.course.tee_types.length; i++) {
         var teeID = courseData.course.tee_types[i].tee_type;              // get the name of the tee type
         teeArray.push(teeID);
         var tee = "<div id='" + teeID + "' class='tees'><div class='headers'>" + teeID.toUpperCase() + "</div></div>";     // creates a div with the id teeID and class tees
         $("#teesContainer").append(tee);
         $("#" + teeID).css("background-color", hexToRgba(courseData.course.tee_types[i].tee_hex_color));
+
+        // populate yardage
         for (var j = 0; j < courseHoles.length; j++) {
             var teeYardsDiv = "<div id='" + teeID + j + "' class='yardage'>";
+
+            // find the right tee yardage
             for (var k = 0; k < courseHoles[j].tee_boxes.length; k++) {
                 var teeBoxObj = courseHoles[j].tee_boxes[k].tee_type;
                 if (teeBoxObj === teeID) {
@@ -77,21 +81,27 @@ function initCard() {
                 currentTee = $(this).attr("id");
                 var teeIndex = teeArray.indexOf(currentTee);
 
-                //add in par code
+                //populate par and handicap
                 var parContainer = "<div id='parValues'><div class='headers'>PAR</div></div>";
-                $("#teesContainer").append(parContainer);
+                var hcpContainer = "<div id='hcpValues'><div class='headers'>HANDICAP</div></div>";
+                $("#teesContainer").append(parContainer, hcpContainer);
+
                 for (var i = 0; i < courseHoles.length; i++) {
-                    var parDiv = "<div id='par" + i + "' class='yardage'>"
+                    var parDiv = "<div id='par" + i + "' class='yardage'>";
+                    var hcpDiv = "<div id='hcp" + i + "' class='yardage'>";
                     for (var k = 0; k < courseHoles[i].tee_boxes.length; k++) {
                         var teeBoxObj = courseHoles[i].tee_boxes[k].tee_type;
                         if (teeBoxObj === teeID) {
                             parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
+                            hcpDiv += courseHoles[i].tee_boxes[k].hcp + "</div>";
                             break;
                         }
                     }
                     $("#parValues").append(parDiv);
+                    $("#hcpValues").append(hcpDiv);
                     if (i % 9 === 8) {
                         var parBreakDIV = "<div id='parBreak" + Math.floor(i / 9) + "' class='yardage'>";
+                        var hcpBreakDIV = "<div class='yardage'>";
                         if (i === 8) {
                             parBreakDIV += courseData.course.tee_types[teeIndex].front_nine_par + "</div>";
                         }
@@ -99,10 +109,13 @@ function initCard() {
                             parBreakDIV += courseData.course.tee_types[teeIndex].back_nine_par + "</div>";
                         }
                         $("#parValues").append(parBreakDIV);
+                        $("#hcpValues").append(hcpBreakDIV);
                     }
                 }
                 var totalParHeader = "<div id='totalPar' class='yardage'>" + courseData.course.tee_types[teeIndex].par + "</div>";
+                var totalHcp = "<div class='yardage'>";
                 $("#parValues").append(totalParHeader);
+                $("#hcpValues").append(totalHcp);
 
             }
             else {
@@ -170,7 +183,7 @@ $("#courseSelectBtn").click(function () {
 });
 
 function addPlayer(morePlayers) {
-    $("#playerModal").css("display", "block");
+    $("#playerModal").fadeIn();
     $("#modalContent").html("Enter Player Names:");
     for (var i = 0; i < morePlayers; i++) {
         var nameInput = "<input type='text' id='newPlayer" + i + "' class='nameInputField'>";
@@ -207,7 +220,7 @@ function addPlayer(morePlayers) {
         }
 
         if (valid) {
-            $("#playerModal").css("display", "none");
+            $("#playerModal").fadeOut();
             for (var i = 0; i < morePlayers; i++) {
                 players.push($("#newPlayer" + i).val());
                 var playerField = "<div id='player" + (i + addedPlayers) + "' class='playerBar'><div class='headers'>" + $('#newPlayer' + i).val() + "<span class='removePlayerBtn'><i class='fa fa-minus-circle'></i></span></div></div>";
@@ -216,11 +229,11 @@ function addPlayer(morePlayers) {
                     var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "'type='text' class='scoreField'></div>";
                     $("#player" + (i + addedPlayers)).append(scoreDiv);
                     if (j % 9 === 8) {
-                        var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'>h</div>";
+                        var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'></div>";
                         $("#player" + (i + addedPlayers)).append(scoreTotalDiv);
                     }
                 }
-                var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'>h</div>";
+                var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'></div>";
                 $("#player" + (i + addedPlayers)).append(scoreFinalDiv);
             }
             addedPlayers += morePlayers;
@@ -236,7 +249,7 @@ function addPlayer(morePlayers) {
             }
         });
 
-        $(".scoreField").change(function () {
+        $(".scoreField").unbind().change(function () {
             if (roundBegun) {
                 $(this).removeClass("invalidScore");
                 var validScore = true;
@@ -274,11 +287,20 @@ function addPlayer(morePlayers) {
                         var activeScoreDivID = "";
                         var roundFinished = false;
                         if (currentHole < 9) {
-                            activeScoreDivID = "player" + playerID + "Total" + 9;
+                            activeScoreDivID = $("#player" + playerID + "Total9");
                         }
                         else {
-                            activeScoreDivID = "player" + playerID + "Total" + 18;
+                            activeScoreDivID = $("#player" + playerID + "Total18");
                         }
+                        if (activeScoreDivID.html() === null || $.trim(activeScoreDivID.html()) === "")
+                        {
+                            activeScoreDivID.html($(this).val());
+                        }
+                        else
+                        {
+                            activeScoreDivID.html(Number(activeScoreDivID.html()) + Number($(this).val()));
+                        }
+
                         if (currentHole === (courseData.course.holes.length - 1)) {
                             roundFinished = true;
                         }
@@ -291,7 +313,28 @@ function addPlayer(morePlayers) {
                         var playerRow = $(this).parent().parent().attr("id");
                         $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
                         $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
-                        console.log("Yay, no more golf!");
+                        $("#player" + playerID + "TotalYrd").html(Number($("#player" + playerID + "Total9").html()) + Number($("#player" + playerID + "Total18").html()));
+
+                        var strokesPar = Number($("#player" + playerID + "TotalYrd").html()) - Number($("#totalPar").html());
+                        var endGameMsg = "";
+                        if (strokesPar <= -20)
+                        {
+                            endGameMsg = "Watch out early 2000s Tiger Woods!"
+                        }
+                        else if (strokesPar < 0)
+                        {
+                            endGameMsg = "Yay, the happy side of par!"
+                        }
+                        else if (strokesPar <= 10)
+                        {
+                            endGameMsg = "Not too shabby!"
+                        }
+                        else
+                        {
+                            endGameMsg = "It looks like Charles Barkley was on the course today..."
+                        }
+                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>Player" + playerID + " has a score of " + strokesPar + ". " + endGameMsg + "</div>";
+                        $("#scoreCard").append(playerResult);
                     }
                 }
             }
@@ -310,7 +353,6 @@ function hexToRgba(hex) {
 }
 
 
-// what I still need: tabulate player's score, handicap row, final score relative to par and some message reflecting the score
 // what I need to do for the extra stuff: display a map of the hole with tee and hole position, find course within radius of app
-// UI stuff that needs doing: course selection page
-// yardage and par are wrong - order of tee types for the whole course is different in each hole - will have to find tee type in each hole and get appropriate values
+// UI stuff that needs doing: course selection page, different color for hcp and need a height for empty fields in hcp and players
+// need a close button for the modal if they want to quit without adding a new player
