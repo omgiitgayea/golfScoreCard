@@ -412,3 +412,5 @@ $("#closeMapModal").click(function () {
 
 // what I need to do for the extra stuff: find course within radius of app
 // UI stuff that needs doing: course selection page, different color for hcp and need a height for empty fields in hcp and players
+// if doing the choose between radius or location search, use the :checked thingy to see which radio was selected when clicked
+// maybe want to add an info window on tee marker to show hole and yardage
