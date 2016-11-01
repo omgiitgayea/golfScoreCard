@@ -92,9 +92,10 @@ function initCard() {
                     var hcpDiv = "<div id='hcp" + i + "' class='yardage'>";
                     for (var k = 0; k < courseHoles[i].tee_boxes.length; k++) {
                         var teeBoxObj = courseHoles[i].tee_boxes[k].tee_type;
-                        if (teeBoxObj === teeID) {
+                        if (teeBoxObj === currentTee) {
                             parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
                             hcpDiv += courseHoles[i].tee_boxes[k].hcp + "</div>";
+                            holePosArray.push(courseHoles[i].tee_boxes[k].location);
                             // insert code for pushing lat and lng to hole position array
                             break;
                         }
@@ -118,11 +119,16 @@ function initCard() {
                 var totalHcp = "<div class='yardage'>";
                 $("#parValues").append(totalParHeader);
                 $("#hcpValues").append(totalHcp);
+                $(".hole").css("cursor", "pointer");
+
 
                 $(".hole").click(function ()
                 {
                     var holeIndex = $(this).attr("id").slice(6);
-                    // insert code for showing maps modal
+                    // insert code for showing maps modal, should be able to use the modal for adding players
+                    $("#mapModal").fadeIn();
+                    $("#mapModalContent").slideDown();
+                    initMap(courseHoles[holeIndex].green_location, holePosArray[holeIndex]);
                 });
             }
             else {
@@ -130,6 +136,8 @@ function initCard() {
                 $("#parValues").remove();
                 $("#hcpValues").remove();
                 $(".hole").off("click");
+                $(".hole").css("cursor", "default");
+
             }
         }
     });
@@ -246,6 +254,8 @@ function addPlayer(morePlayers) {
                 $("#player" + (i + addedPlayers)).append(scoreFinalDiv);
             }
             addedPlayers += morePlayers;
+
+
         }
 
         $(".removePlayerBtn").unbind().click(function () {
@@ -257,6 +267,8 @@ function addPlayer(morePlayers) {
                 $("#startRound").remove();
             }
         });
+
+
 
         $(".scoreField").unbind().change(function () {
             if (roundBegun) {
@@ -355,6 +367,30 @@ function addPlayer(morePlayers) {
     });
 }
 
+function initMap(holePos, teePos) {
+    var centerPos = {lat:((holePos.lat + teePos.lat) / 2), lng:((holePos.lng + teePos.lng) / 2)};
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: centerPos,
+        mapTypeId: "satellite"
+    });
+    var markerHole = new google.maps.Marker({
+        position: holePos,
+        map: map,
+        label: "H"
+    });
+    var markerTee = new google.maps.Marker({
+        position: teePos,
+        map: map,
+        label: "T"
+    });
+    var latLng = [new google.maps.LatLng(holePos.lat, holePos.lng), new google.maps.LatLng(teePos.lat, teePos.lng)];
+    var latLngBounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < latLng.length; i++)
+    {
+        latLngBounds.extend(latLng[i]);
+    }
+    map.fitBounds(latLngBounds);
+}
 
 // for changing hex color to rgba color
 function hexToRgba(hex) {
@@ -362,7 +398,17 @@ function hexToRgba(hex) {
     return "rgba(" + parseInt(result[1], 16) + ", " + parseInt(result[2], 16) + ", " + parseInt(result[3], 16) + ", " + TEES_ALPHA + ")";
 }
 
+$("#closePlayerModal").click(function () {
+    $("#playerModal").fadeOut();
+    if (players.length === 0) {
+        $("#teesContainer").html("");
+        $("#startRound").remove();
+    }
+});
 
-// what I need to do for the extra stuff: display a map of the hole with tee and hole position, find course within radius of app
+$("#closeMapModal").click(function () {
+    $("#mapModal").fadeOut();
+});
+
+// what I need to do for the extra stuff: find course within radius of app
 // UI stuff that needs doing: course selection page, different color for hcp and need a height for empty fields in hcp and players
-// need a close button for the modal if they want to quit without adding a new player
