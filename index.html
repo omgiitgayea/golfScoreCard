@@ -9,23 +9,27 @@
     <script src="public/thirdParty/jquery/dist/jquery.js"></script>
     <script src="https://use.fontawesome.com/44ea897ebc.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbJtG8Iq8wEWzXx50gvTg1Vv-O_RLQ8qg"></script>
-    <script src="js/startPage.js"></script>
+    <script src="js/startPage.js" defer></script>
     <script src="js/golfScript.js" defer></script>
 </head>
 
 <body>
     <img id="logoSpot" src="images/BeeALogo.png" width="70px">
+
     <header id="cardHeader">It's in the activity done for enjoyment!</header>
+
     <div id="mainContainer">
-        <div id="loading">
-            <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-            <div>Loading Course Data...</div>
-        </div>
         <!--the main container will start out with the course selection and number of player selection-->
         <select id="courseSelectMenu">
             <option disabled selected value> -- Select a Golf Course -- </option>
         </select>
+        <div id="courseInfo"></div>
         <button id="courseSelectBtn">Select Course</button>
+    </div>
+
+    <div id="loading">
+        <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+        <div>Loading Course Data...</div>
     </div>
 
     <div id="playerModal">
@@ -42,5 +46,16 @@
             <div id="map"></div>
         </div>
     </div>
+
+    <div id="splashModal">
+        <div id="splashModalContent">
+            <img src="images/BeeALogo.png" width="30%">
+            <div id="coursesLoading">Loading Golf Courses....</div>
+            <div id="loadingBar">
+                <div id="cylonEye"></div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

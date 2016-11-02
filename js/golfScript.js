@@ -77,6 +77,7 @@ function initCard() {
             $("#missingTeeType").html("");
             $(".tees").slideToggle();
             $(this).stop();
+            console.log(currentTee);
             if (currentTee === "") {
                 currentTee = $(this).attr("id");
                 var teeIndex = teeArray.indexOf(currentTee);
@@ -157,46 +158,51 @@ function initCard() {
 }
 
 $("#courseSelectBtn").click(function () {
-    $("#loading").show();
-    // setTimeout(function () {            // setTimeout is only there for testing of loading animation
-    $.getJSON("https://golf-courses-api.herokuapp.com/courses/11819", function (data) {
-        courseData = data;
-        $("#courseSelectBtn").hide();
-        $("#loading").hide();
-        $("#courseSelectMenu").hide();
+    if (courseID != "") {
+        $("#loading").show();
+        console.log(courseID);
+        // setTimeout(function () {            // setTimeout is only there for testing of loading animation
+            $.getJSON("https://golf-courses-api.herokuapp.com/courses/" + courseID, function (data) {
+                courseData = data;
+                $("#courseSelectBtn").hide();
+                $("#loading").hide();
+                $("#courseSelectMenu").hide();
+                $("#courseInfo").html("");
 
-        var newPlayer = "<div id='newPlayerDiv'><input type='number' id='playerNumbers' min='1' max='" + MAX_PLAYERS + "' value='1'><button id='newPlayerBtn'>Add player(s)</button><span id='invalidPlayersMsg'></span></div>";
-        var scoreContainer = "<div id='scoreCard'></div>";
-        var courseName = "<div id='courseContainer'>" + courseData.course.name + "</div>";
-        var cardContainer = "<div id='teesContainer'></div>";
-        $("#mainContainer").append(courseName, cardContainer, scoreContainer);
-        $("#scoreCard").append(newPlayer);
+                var newPlayer = "<div id='newPlayerDiv'><input type='number' id='playerNumbers' min='1' max='" + MAX_PLAYERS + "' value='1'><button id='newPlayerBtn'>Add player(s)</button><span id='invalidPlayersMsg'></span></div>";
+                var scoreContainer = "<div id='scoreCard'></div>";
+                var courseName = "<div id='courseContainer'>" + courseData.course.name + "</div>";
+                var cardContainer = "<div id='teesContainer'></div>";
+                $("#mainContainer").append(courseName, cardContainer, scoreContainer);
+                $("#scoreCard").append(newPlayer);
 
-        $("#newPlayerBtn").click(function () {
-            var addnPlayers = $("#playerNumbers").val();
+                $("#newPlayerBtn").click(function () {
+                    var addnPlayers = $("#playerNumbers").val();
 
-            if (addnPlayers > 0 && (Number(addnPlayers) + players.length) <= MAX_PLAYERS) {
-                $("#invalidPlayersMsg").html("");
-                if (players.length <= 0) {
-                    $("#teesContainer").css("display", "inline-block");
-                    initCard();
-                }
-                addPlayer(Number(addnPlayers));
-            }
-            else if (addnPlayers <= 0) {
-                $("#invalidPlayersMsg").html("At least one player must play...");
-            }
-            else if ((Number(addnPlayers) + players.length) > MAX_PLAYERS) {
-                $("#invalidPlayersMsg").html("Only " + MAX_PLAYERS + " players can play at a time");
-            }
+                    if (addnPlayers > 0 && (Number(addnPlayers) + players.length) <= MAX_PLAYERS) {
+                        $("#invalidPlayersMsg").html("");
+                        if (players.length <= 0) {
+                            $("#teesContainer").css("display", "inline-block");
+                            initCard();
+                        }
+                        addPlayer(Number(addnPlayers));
+                    }
+                    else if (addnPlayers <= 0) {
+                        $("#invalidPlayersMsg").html("At least one player must play...");
+                    }
+                    else if ((Number(addnPlayers) + players.length) > MAX_PLAYERS) {
+                        $("#invalidPlayersMsg").html("Only " + MAX_PLAYERS + " players can play at a time");
+                    }
 
-            $("#playerNumbers").val("1");
+                    $("#playerNumbers").val("1");
 
 
-        });
+                });
 
-    });
-    // }, 1000);
+            });
+
+        // }, 1000);
+    }
 
 });
 
@@ -266,6 +272,7 @@ function addPlayer(morePlayers) {
             if (players.length === 0) {
                 $("#teesContainer").html("");
                 $("#startRound").remove();
+                currentTee = "";
             }
         });
 
@@ -335,9 +342,16 @@ function addPlayer(morePlayers) {
                         var playerRow = $(this).parent().parent().attr("id");
                         $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
                         $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
-                        $("#player" + playerID + "TotalYrd").html(Number($("#player" + playerID + "Total9").html()) + Number($("#player" + playerID + "Total18").html()));
 
-                        var strokesPar = Number($("#player" + playerID + "TotalYrd").html()) - Number($("#totalPar").html());
+                        var totalScore = Number($("#player" + playerID + "Total9").html());
+                        if (courseData.course.holes.length >= 18)
+                        {
+                            totalScore += Number($("#player" + playerID + "Total18").html());
+                        }
+
+                        $("#player" + playerID + "TotalYrd").html(totalScore);
+                        console.log(Number($("#player" + playerID + "TotalYrd").html()));
+                        var strokesPar = totalScore - Number($("#totalPar").html());
                         var endGameMsg = "";
                         if (strokesPar <= -20)
                         {
@@ -372,7 +386,8 @@ function initMap(holePos, teePos) {
     var centerPos = {lat:((holePos.lat + teePos.lat) / 2), lng:((holePos.lng + teePos.lng) / 2)};
     var map = new google.maps.Map(document.getElementById('map'), {
         center: centerPos,
-        mapTypeId: "satellite"
+        mapTypeId: "satellite",
+        disableDefaultUI: true
     });
     var markerHole = new google.maps.Marker({
         position: holePos,
@@ -411,7 +426,6 @@ $("#closeMapModal").click(function () {
     $("#mapModal").fadeOut();
 });
 
-// what I need to do for the extra stuff: find course within radius of app
-// UI stuff that needs doing: course selection page, different color for hcp and need a height for empty fields in hcp and players
+// UI stuff that needs doing: different color for hcp and need a height for empty fields in hcp and players
 // if doing the choose between radius or location search, use the :checked thingy to see which radio was selected when clicked
 // maybe want to add an info window on tee marker to show hole and yardage
