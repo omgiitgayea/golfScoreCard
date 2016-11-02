@@ -161,8 +161,9 @@ $("#courseSelectBtn").click(function () {
     // setTimeout(function () {            // setTimeout is only there for testing of loading animation
     $.getJSON("https://golf-courses-api.herokuapp.com/courses/11819", function (data) {
         courseData = data;
-        $("#courseSelectBtn").remove();
-        $("#loading").remove();
+        $("#courseSelectBtn").hide();
+        $("#loading").hide();
+        $("#courseSelectMenu").hide();
 
         var newPlayer = "<div id='newPlayerDiv'><input type='number' id='playerNumbers' min='1' max='" + MAX_PLAYERS + "' value='1'><button id='newPlayerBtn'>Add player(s)</button><span id='invalidPlayersMsg'></span></div>";
         var scoreContainer = "<div id='scoreCard'></div>";

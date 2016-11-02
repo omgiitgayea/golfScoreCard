@@ -129,6 +129,7 @@ body
 {
     position: absolute;
     bottom: 10px;
+    left: 46%;
     text-align: center;
 }
 
@@ -245,4 +246,10 @@ body
     color: white;
     font-size: 50px;
     cursor: pointer;
+}
+#logoSpot
+{
+    position: fixed;
+    top: 10px;
+    left: 600px;
 }
