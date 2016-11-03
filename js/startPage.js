@@ -4,9 +4,13 @@
 // this is where we build up the course selection page
 var RADIUS = 50 / 0.621371;         // that's 50 miles converted to km because you know, America
 var courseID = "";
+var myAudio;
 
 $(document).ready(function () {
     // put splash page up like a modal type thing when starting, remove when courses are loaded up
+    myAudio = document.getElementById("myAudio");
+    myAudio.loop = true;
+    myAudio.play();
     getGeolocation();
     animatethis($("#cylonEye"), 800);
 
@@ -20,31 +24,26 @@ function getGeolocation() {
         };
 
         function success(pos) {
-            getCourses(pos.coords).then(function (courses) {
-                    //what to do with the data
-                    $("#splashModal").fadeOut();
+            getCourses(pos.coords).then(function (courses)
+                {
+                    setTimeout(function(){
+                        $("#splashModal").fadeOut();
+                        myAudio.pause();
+                    }, 2000);
+
                     for (var i = 0; i < courses.length; i++) {
                         var courseName = courses[i].name;
                         var city = courses[i].city;
                         var optionDiv = "<option value='" + courses[i].id + "'>" + courseName + ", " + city + "</option>";
                         $("#courseSelectMenu").append(optionDiv);
-                        // this stuff that was consoled out will be put in some sort of div for address
-                        // also would like to put on a map of the course and weather widget
-                        // console.log(courses[i].addr_1);
-                        // console.log(courses[i].state_or_province);
-                        // console.log(courses[i].phone);
-                        // console.log(courses[i].zip_code);
-                        // console.log(courses[i].country);
                     }
-                    $("#courseSelectMenu").change(function ()
-                    {
+
+                    $("#courseSelectMenu").change(function () {
                         $("#courseInfo").html("");
                         var currentID = $(this).val();
                         var idIndex = 0;
-                        for (var i = 0; i < courses.length; i++)
-                        {
-                            if (courses[i].id === Number(currentID))
-                            {
+                        for (var i = 0; i < courses.length; i++) {
+                            if (courses[i].id === Number(currentID)) {
                                 idIndex = i;
                                 break;
                             }
@@ -107,7 +106,7 @@ function animatethis(targetElement, speed) {
 
 // for adding a map
 function initCourseMap(coursePos) {
-    var centerPos = {lat:coursePos.lat, lng:coursePos.lng};
+    var centerPos = {lat: coursePos.lat, lng: coursePos.lng};
     var map = new google.maps.Map(document.getElementById('courseMap'), {
         zoom: 16,
         center: centerPos,

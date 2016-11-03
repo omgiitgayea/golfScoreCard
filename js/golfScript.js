@@ -105,7 +105,7 @@ function initCard() {
                     $("#hcpValues").append(hcpDiv);
                     if (i % 9 === 8) {
                         var parBreakDIV = "<div id='parBreak" + Math.floor(i / 9) + "' class='yardage'>";
-                        var hcpBreakDIV = "<div class='yardage'>";
+                        var hcpBreakDIV = "<div class='yardage'>&nbsp;</div>";
                         if (i === 8) {
                             parBreakDIV += courseData.course.tee_types[teeIndex].front_nine_par + "</div>";
                         }
@@ -117,7 +117,7 @@ function initCard() {
                     }
                 }
                 var totalParHeader = "<div id='totalPar' class='yardage'>" + courseData.course.tee_types[teeIndex].par + "</div>";
-                var totalHcp = "<div class='yardage'>";
+                var totalHcp = "<div class='yardage'>&nbsp;</div>";
                 $("#parValues").append(totalParHeader);
                 $("#hcpValues").append(totalHcp);
                 $(".hole").css("cursor", "pointer");
@@ -253,11 +253,11 @@ function addPlayer(morePlayers) {
                     var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "'type='text' class='scoreField'></div>";
                     $("#player" + (i + addedPlayers)).append(scoreDiv);
                     if (j % 9 === 8) {
-                        var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'></div>";
+                        var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'>&nbsp;</div>";
                         $("#player" + (i + addedPlayers)).append(scoreTotalDiv);
                     }
                 }
-                var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'></div>";
+                var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'>&nbsp;</div>";
                 $("#player" + (i + addedPlayers)).append(scoreFinalDiv);
             }
             addedPlayers += morePlayers;
@@ -321,7 +321,7 @@ function addPlayer(morePlayers) {
                         else {
                             activeScoreDivID = $("#player" + playerID + "Total18");
                         }
-                        if (activeScoreDivID.html() === null || $.trim(activeScoreDivID.html()) === "")
+                        if (currentHole === 0)
                         {
                             activeScoreDivID.html($(this).val());
                         }

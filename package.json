@@ -1,0 +1,25 @@
+{
+  "name": "golfscorecard",
+  "version": "1.0.0",
+  "description": "So much code for a golf score card",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omgiitgayea/golfScoreCard.git"
+  },
+  "keywords": [
+    "golf",
+    "awesome",
+    "maps",
+    "score"
+  ],
+  "author": "omgiitgayea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omgiitgayea/golfScoreCard/issues"
+  },
+  "homepage": "https://github.com/omgiitgayea/golfScoreCard#readme"
+}

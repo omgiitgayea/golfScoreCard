@@ -14,6 +14,11 @@
 </head>
 
 <body>
+
+    <audio id="myAudio">
+        <source src="sounds/CylonEye.mp3" type="audio/mpeg">
+    </audio>
+
     <img id="logoSpot" src="images/BeeALogo.png" width="70px">
 
     <header id="cardHeader">It's in the activity done for enjoyment!</header>
@@ -24,7 +29,9 @@
             <option disabled selected value> -- Select a Golf Course -- </option>
         </select>
         <div id="courseInfo"></div>
-        <button id="courseSelectBtn">Select Course</button>
+        <div id="courseSelectBtncontainer">
+            <button id="courseSelectBtn">Select Golf Course</button>
+        </div>
     </div>
 
     <div id="loading">
