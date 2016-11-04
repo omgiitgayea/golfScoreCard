@@ -139,42 +139,54 @@ $("input[type=radio][name=courseSearch]").change(function () {
         $("#modalContent").append(addressInput, nameInput, cityInput, stateInput, countryInput);
 
         $("#playerSubmitBtn").click(function () {
-            var valid = true;
+            submitLocation();
+        });
 
-            if ($("#countryIn").val() === "" && $("#stateIn").val() === "" && $("#cityIn").val() === "" && $("#nameIn").val() === "" && $("#addressIn").val() === "")
+        $("input").keypress(function (event) {
+            if (event.which == 13)
             {
-                $("#missingCourseInfo").html("Please fill in at least one field");
-                valid = false;
+                event.preventDefault();
+                submitLocation();
             }
-            else
-            {
-                valid = true;
-            }
-
-            if (valid)
-            {
-                $("#playerModal").fadeOut();
-                $("#missingCourseInfo").html("");
-                var locationSubmit = {
-                    country: $("#countryIn").val(),
-                    state: $("#stateIn").val(),
-                    city: $("#cityIn").val(),
-                    name: $("#nameIn").val(),
-                    address: $("#addressIn").val()
-                };
-
-                $("#loading").fadeIn();
-                getCoursesByLocation(locationSubmit).then(function (courses)
-                    {
-                        $("#loading").fadeOut();
-                        buildMenu(courses);
-                    }
-                );
-            }
-        })
+        });
     }
 });
 
+function submitLocation ()
+{
+    var valid = true;
+
+    if ($("#countryIn").val() === "" && $("#stateIn").val() === "" && $("#cityIn").val() === "" && $("#nameIn").val() === "" && $("#addressIn").val() === "")
+    {
+        $("#missingCourseInfo").html("Please fill in at least one field");
+        valid = false;
+    }
+    else
+    {
+        valid = true;
+    }
+
+    if (valid)
+    {
+        $("#playerModal").fadeOut();
+        $("#missingCourseInfo").html("");
+        var locationSubmit = {
+            country: $("#countryIn").val(),
+            state: $("#stateIn").val(),
+            city: $("#cityIn").val(),
+            name: $("#nameIn").val(),
+            address: $("#addressIn").val()
+        };
+
+        $("#loading").fadeIn();
+        getCoursesByLocation(locationSubmit).then(function (courses)
+            {
+                $("#loading").fadeOut();
+                buildMenu(courses);
+            }
+        );
+    }
+}
 function animatethis(targetElement, speed) {
     $(targetElement).animate({marginLeft: "+=350px"},
         {

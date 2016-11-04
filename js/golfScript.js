@@ -235,176 +235,19 @@ function addPlayer(morePlayers) {
     $("#playerSubmitBtn").html(btnText);
 
     $("#playerSubmitBtn").unbind().click(function () {
-        var valid = true;
-        var compInputs = [];
-        for (var i = 0; i < morePlayers; i++) {
-            var playerInput = $("#newPlayer" + i);
-            if (playerInput.val() === null || $.trim(playerInput.val()) === "") {
-                valid = false;
-                playerInput.val("");
-                playerInput.css("border-color", "red");
-                playerInput.css("background-color", "pink");
-                $("#missingCourseInfo").html("Please fill out the fields");
-            }
-            if ((compInputs.indexOf(playerInput.val()) != -1 && compInputs.length > 0) || (players.indexOf(playerInput.val()) != -1 && players.length > 0)) {
-                valid = false;
-                playerInput.val("");
-                playerInput.css("border-color", "red");
-                playerInput.css("background-color", "pink");
-                $("#missingCourseInfo").html("Duplicate Player");
-            }
-            if (playerInput.val != "") {
-                compInputs.push(playerInput.val());
-            }
+        submitPlayers(morePlayers);
+        removePlayers();
+        updateScore();
+    });
+
+    $("input").keypress(function (event) {
+        if (event.which == 13)
+        {
+            event.preventDefault();
+            submitPlayers(morePlayers);
+            removePlayers();
+            updateScore();
         }
-
-        if (valid) {
-            $("#playerModal").fadeOut();
-            for (var i = 0; i < morePlayers; i++) {
-                players.push($("#newPlayer" + i).val());
-                var playerField = "<div id='player" + (i + addedPlayers) + "' class='playerBar'><div class='headers'>" + $('#newPlayer' + i).val() + "<span class='removePlayerBtn'><i class='fa fa-minus-circle'></i></span></div></div>";
-                $("#scoreCard").append(playerField);
-                for (var j = 0; j < courseData.course.holes.length; j++) {
-                    var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "'type='text' class='scoreField'></div>";
-                    $("#player" + (i + addedPlayers)).append(scoreDiv);
-                    if (j % 9 === 8) {
-                        var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'>&nbsp;</div>";
-                        $("#player" + (i + addedPlayers)).append(scoreTotalDiv);
-                    }
-                }
-                var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'>&nbsp;</div>";
-                $("#player" + (i + addedPlayers)).append(scoreFinalDiv);
-            }
-            addedPlayers += morePlayers;
-
-
-        }
-
-        $(".removePlayerBtn").unbind().click(function () {
-            var gonePlayerName = $(this).parent().text();
-            players.splice(players.indexOf(gonePlayerName), 1);
-            $(this).parent().parent().remove();
-            if (players.length === 0) {
-                $("#teesContainer").html("");
-                $("#startRound").remove();
-                currentTee = "";
-            }
-        });
-
-
-
-        $(".scoreField").unbind().change(function () {
-            if (roundBegun) {
-                $(this).removeClass("invalidScore");
-                var validScore = true;
-                var numOnly = /^[0-9]*$/;
-                if (numOnly.test($(this).val())) {
-                    if ($(this).val() < 1) {
-                        validScore = false;
-                    }
-                }
-                else {
-                    validScore = false;
-                }
-
-                if (!validScore) {
-                    $(this).addClass("invalidScore");
-                    $(this).val("");
-                }
-                else {
-                    var currentPlayer = $(this).attr("id");
-                    var dashLocation = currentPlayer.indexOf("-");
-                    var playerID = currentPlayer.slice(6, dashLocation);
-                    var currentHole = Number(currentPlayer.slice(dashLocation + 1));
-                    var validField = true;
-
-                    if (currentHole != 0) {
-                        for (var testPrev = 0; testPrev < currentHole; testPrev++) {
-                            if ($("#player" + playerID + "-" + testPrev).val() === null || $.trim($("#player" + playerID + "-" + testPrev).val()) === "") {
-                                validField = false;
-                                $("#player" + playerID + "-" + testPrev).addClass("invalidScore");
-                            }
-                        }
-                    }
-                    if (validField) {
-                        $(".scoreField").removeClass("invalidScore");
-                        var activeScoreDivID = "";
-                        var roundFinished = false;
-                        if (currentHole < 9) {
-                            activeScoreDivID = $("#player" + playerID + "Total9");
-                        }
-                        else {
-                            activeScoreDivID = $("#player" + playerID + "Total18");
-                        }
-                        if (currentHole === 0 || currentHole === 9)
-                        {
-                            activeScoreDivID.html($(this).val());
-                        }
-                        else
-                        {
-                            activeScoreDivID.html(Number(activeScoreDivID.html()) + Number($(this).val()));
-                        }
-
-                        if (currentHole === (courseData.course.holes.length - 1)) {
-                            roundFinished = true;
-                        }
-                    }
-                    else {
-                        $(this).val("");
-                    }
-                    // use $("scoreCard).length to dynamically populate results table as each golfer finishes
-                    if (roundFinished) {
-                        var playerRow = $(this).parent().parent().attr("id");
-                        $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
-                        $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
-                        $("#" + playerRow).children(".holeScore").children(".scoreField").css("font-size", "20px");
-
-                        var totalScore = Number($("#player" + playerID + "Total9").html());
-                        if (courseData.course.holes.length >= 18)
-                        {
-                            totalScore += Number($("#player" + playerID + "Total18").html());
-                        }
-
-                        $("#player" + playerID + "TotalYrd").html(totalScore);
-                        var strokesPar = totalScore - Number($("#totalPar").html());
-                        var endGameMsg = "";
-                        if (strokesPar <= -20)
-                        {
-                            endGameMsg = "Watch out early 2000s Tiger Woods!"
-                        }
-                        else if (strokesPar < 0)
-                        {
-                            endGameMsg = "Yay, the happy side of par!"
-                        }
-                        else if (strokesPar <= 10)
-                        {
-                            endGameMsg = "Not too shabby!"
-                        }
-                        else
-                        {
-                            endGameMsg = "It looks like Charles Barkley was on the course today..."
-                        }
-                        var playerName = $("#player" + playerID).children(".headers").html();
-                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of <span id='strokeClr" + playerID + "'>" + strokesPar + "</span>. " + endGameMsg + "</div>";
-
-                        $("#scoreCard").append(playerResult);
-
-                        $("#strokeClr" + playerID).css("text-shadow", "1px 1px 3px #555555");
-                        if(strokesPar <= 0)
-                        {
-                            $("#strokeClr" + playerID).css("color", "green");
-                        }
-                        else
-                        {
-                            $("#strokeClr" + playerID).css("color", "darkred");
-                        }
-                    }
-                }
-            }
-            else {
-                $(this).val("");
-            }
-        })
     });
 }
 
@@ -452,5 +295,180 @@ $("#closeMapModal").click(function () {
     $("#mapModal").fadeOut();
 });
 
+function submitPlayers(morePlayers)
+{
+    var valid = true;
+    var compInputs = [];
+    for (var i = 0; i < morePlayers; i++) {
+        var playerInput = $("#newPlayer" + i);
+        if (playerInput.val() === null || $.trim(playerInput.val()) === "") {
+            valid = false;
+            playerInput.val("");
+            playerInput.css("border-color", "red");
+            playerInput.css("background-color", "pink");
+            $("#missingCourseInfo").html("Please fill out the fields");
+        }
+        if ((compInputs.indexOf(playerInput.val()) != -1 && compInputs.length > 0) || (players.indexOf(playerInput.val()) != -1 && players.length > 0)) {
+            valid = false;
+            playerInput.val("");
+            playerInput.css("border-color", "red");
+            playerInput.css("background-color", "pink");
+            $("#missingCourseInfo").html("Duplicate Player");
+        }
+        if (playerInput.val != "") {
+            compInputs.push(playerInput.val());
+        }
+    }
+
+    if (valid) {
+        $("#playerModal").fadeOut();
+        for (var i = 0; i < morePlayers; i++) {
+            players.push($("#newPlayer" + i).val());
+            var playerField = "<div id='player" + (i + addedPlayers) + "' class='playerBar'><div class='headers'>" + $('#newPlayer' + i).val() + "<span class='removePlayerBtn'><i class='fa fa-minus-circle'></i></span></div></div>";
+            $("#scoreCard").append(playerField);
+            for (var j = 0; j < courseData.course.holes.length; j++) {
+                var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "'type='text' class='scoreField'></div>";
+                $("#player" + (i + addedPlayers)).append(scoreDiv);
+                if (j % 9 === 8) {
+                    var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'>&nbsp;</div>";
+                    $("#player" + (i + addedPlayers)).append(scoreTotalDiv);
+                }
+            }
+            var scoreFinalDiv = "<div id='player" + (i + addedPlayers) + "TotalYrd' class='yardage'>&nbsp;</div>";
+            $("#player" + (i + addedPlayers)).append(scoreFinalDiv);
+        }
+        addedPlayers += morePlayers;
+    }
+}
+
+function removePlayers()
+{
+    $(".removePlayerBtn").unbind().click(function () {
+        var gonePlayerName = $(this).parent().text();
+        players.splice(players.indexOf(gonePlayerName), 1);
+        $(this).parent().parent().remove();
+        if (players.length === 0) {
+            $("#teesContainer").html("");
+            $("#startRound").remove();
+            currentTee = "";
+        }
+    });
+}
+
+function updateScore()
+{
+    $(".scoreField").unbind().change(function () {
+        if (roundBegun) {
+            $(this).removeClass("invalidScore");
+            var validScore = true;
+            var numOnly = /^[0-9]*$/;
+            if (numOnly.test($(this).val())) {
+                if ($(this).val() < 1) {
+                    validScore = false;
+                }
+            }
+            else {
+                validScore = false;
+            }
+
+            if (!validScore) {
+                $(this).addClass("invalidScore");
+                $(this).val("");
+            }
+            else {
+                var currentPlayer = $(this).attr("id");
+                var dashLocation = currentPlayer.indexOf("-");
+                var playerID = currentPlayer.slice(6, dashLocation);
+                var currentHole = Number(currentPlayer.slice(dashLocation + 1));
+                var validField = true;
+
+                if (currentHole != 0) {
+                    for (var testPrev = 0; testPrev < currentHole; testPrev++) {
+                        if ($("#player" + playerID + "-" + testPrev).val() === null || $.trim($("#player" + playerID + "-" + testPrev).val()) === "") {
+                            validField = false;
+                            $("#player" + playerID + "-" + testPrev).addClass("invalidScore");
+                        }
+                    }
+                }
+                if (validField) {
+                    $(".scoreField").removeClass("invalidScore");
+                    var activeScoreDivID = "";
+                    var roundFinished = false;
+                    if (currentHole < 9) {
+                        activeScoreDivID = $("#player" + playerID + "Total9");
+                    }
+                    else {
+                        activeScoreDivID = $("#player" + playerID + "Total18");
+                    }
+                    if (currentHole === 0 || currentHole === 9)
+                    {
+                        activeScoreDivID.html($(this).val());
+                    }
+                    else
+                    {
+                        activeScoreDivID.html(Number(activeScoreDivID.html()) + Number($(this).val()));
+                    }
+
+                    if (currentHole === (courseData.course.holes.length - 1)) {
+                        roundFinished = true;
+                    }
+                }
+                else {
+                    $(this).val("");
+                }
+                // use $("scoreCard).length to dynamically populate results table as each golfer finishes
+                if (roundFinished) {
+                    var playerRow = $(this).parent().parent().attr("id");
+                    $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
+                    $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
+                    $("#" + playerRow).children(".holeScore").children(".scoreField").css("font-size", "20px");
+
+                    var totalScore = Number($("#player" + playerID + "Total9").html());
+                    if (courseData.course.holes.length >= 18)
+                    {
+                        totalScore += Number($("#player" + playerID + "Total18").html());
+                    }
+
+                    $("#player" + playerID + "TotalYrd").html(totalScore);
+                    var strokesPar = totalScore - Number($("#totalPar").html());
+                    var endGameMsg = "";
+                    if (strokesPar <= -20)
+                    {
+                        endGameMsg = "Watch out early 2000s Tiger Woods!"
+                    }
+                    else if (strokesPar < 0)
+                    {
+                        endGameMsg = "Yay, the happy side of par!"
+                    }
+                    else if (strokesPar <= 10)
+                    {
+                        endGameMsg = "Not too shabby!"
+                    }
+                    else
+                    {
+                        endGameMsg = "It looks like Charles Barkley was on the course today..."
+                    }
+                    var playerName = $("#player" + playerID).children(".headers").html();
+                    var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of <span id='strokeClr" + playerID + "'>" + strokesPar + "</span>. " + endGameMsg + "</div>";
+
+                    $("#scoreCard").append(playerResult);
+
+                    $("#strokeClr" + playerID).css("text-shadow", "1px 1px 3px #555555");
+                    if(strokesPar <= 0)
+                    {
+                        $("#strokeClr" + playerID).css("color", "green");
+                    }
+                    else
+                    {
+                        $("#strokeClr" + playerID).css("color", "darkred");
+                    }
+                }
+            }
+        }
+        else {
+            $(this).val("");
+        }
+    })
+}
 // if doing the choose between radius or location search, use the :checked thingy to see which radio was selected when clicked
 // maybe want to add an info window on tee marker to show hole and yardage
