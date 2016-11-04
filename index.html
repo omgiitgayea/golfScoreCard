@@ -26,8 +26,12 @@
     <div id="mainContainer">
         <!--the main container will start out with the course selection and number of player selection-->
         <select id="courseSelectMenu">
-            <option disabled selected value> -- Select a Golf Course -- </option>
+
         </select>
+        <span class="locationLabel">
+            <input id="radius" type="radio" name="courseSearch" value="radius" checked><label for="radius">Search within 50 miles</label>
+            <input id="location" type="radio" name="courseSearch" value="location"><label for="location">Search by location</label>
+        </span>
         <div id="courseInfo"></div>
         <div id="courseSelectBtncontainer">
             <button id="courseSelectBtn">Select Golf Course</button>
@@ -44,6 +48,7 @@
         <div id="modalContent"></div>
         <div id="btnDiv">
             <button id="playerSubmitBtn"></button>
+            <div id="missingCourseInfo"></div>
         </div>
     </div>
 

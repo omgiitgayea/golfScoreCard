@@ -77,7 +77,6 @@ function initCard() {
             $("#missingTeeType").html("");
             $(".tees").slideToggle();
             $(this).stop();
-            console.log(currentTee);
             if (currentTee === "") {
                 currentTee = $(this).attr("id");
                 var teeIndex = teeArray.indexOf(currentTee);
@@ -95,7 +94,14 @@ function initCard() {
                         var teeBoxObj = courseHoles[i].tee_boxes[k].tee_type;
                         if (teeBoxObj === currentTee) {
                             parDiv += courseHoles[i].tee_boxes[k].par + "</div>";
-                            hcpDiv += courseHoles[i].tee_boxes[k].hcp + "</div>";
+                            if(courseHoles[i].tee_boxes[k].hcp != undefined)
+                            {
+                                hcpDiv += courseHoles[i].tee_boxes[k].hcp + "</div>";
+                            }
+                            else
+                            {
+                                hcpDiv += "&nbsp;</div>"
+                            }
                             holePosArray.push(courseHoles[i].tee_boxes[k].location);
                             // insert code for pushing lat and lng to hole position array
                             break;
@@ -160,18 +166,18 @@ function initCard() {
 $("#courseSelectBtn").click(function () {
     if (courseID != "") {
         $("#loading").show();
-        console.log(courseID);
         // setTimeout(function () {            // setTimeout is only there for testing of loading animation
             $.getJSON("https://golf-courses-api.herokuapp.com/courses/" + courseID, function (data) {
                 courseData = data;
                 $("#courseSelectBtn").hide();
                 $("#loading").hide();
                 $("#courseSelectMenu").hide();
+                $(".locationLabel").hide();
                 $("#courseInfo").html("");
 
                 var newPlayer = "<div id='newPlayerDiv'><input type='number' id='playerNumbers' min='1' max='" + MAX_PLAYERS + "' value='1'><button id='newPlayerBtn'>Add player(s)</button><span id='invalidPlayersMsg'></span></div>";
                 var scoreContainer = "<div id='scoreCard'></div>";
-                var courseName = "<div id='courseContainer'>" + courseData.course.name + "</div>";
+                var courseName = "<div id='courseContainer'>" + courseData.course.name + ", " + courseData.course.city + "</div>";
                 var cardContainer = "<div id='teesContainer'></div>";
                 $("#mainContainer").append(courseName, cardContainer, scoreContainer);
                 $("#scoreCard").append(newPlayer);
@@ -208,9 +214,10 @@ $("#courseSelectBtn").click(function () {
 
 function addPlayer(morePlayers) {
     $("#playerModal").fadeIn();
-    $("#modalContent").html("Enter Player Names:");
+    $("#modalContent").html("<div>Enter Player Names:</div>");
     for (var i = 0; i < morePlayers; i++) {
-        var nameInput = "<input type='text' id='newPlayer" + i + "' class='nameInputField'>";
+        var nameInput = "<div class='locationLabel'><input type='text' id='newPlayer" + i + "' class='nameInputField'></div>";
+        $(".nameInputField").css("display", "block");
         $("#modalContent").append(nameInput);
     }
     $("#modalContent").slideDown();
@@ -321,7 +328,7 @@ function addPlayer(morePlayers) {
                         else {
                             activeScoreDivID = $("#player" + playerID + "Total18");
                         }
-                        if (currentHole === 0)
+                        if (currentHole === 0 || currentHole === 9)
                         {
                             activeScoreDivID.html($(this).val());
                         }
@@ -342,6 +349,7 @@ function addPlayer(morePlayers) {
                         var playerRow = $(this).parent().parent().attr("id");
                         $("#" + playerRow).children(".holeScore").children(".scoreField").prop("readonly", true);
                         $("#" + playerRow).children(".holeScore").children(".scoreField").css("border", "none");
+                        $("#" + playerRow).children(".holeScore").children(".scoreField").css("font-size", "20px");
 
                         var totalScore = Number($("#player" + playerID + "Total9").html());
                         if (courseData.course.holes.length >= 18)
@@ -350,7 +358,6 @@ function addPlayer(morePlayers) {
                         }
 
                         $("#player" + playerID + "TotalYrd").html(totalScore);
-                        console.log(Number($("#player" + playerID + "TotalYrd").html()));
                         var strokesPar = totalScore - Number($("#totalPar").html());
                         var endGameMsg = "";
                         if (strokesPar <= -20)
@@ -426,6 +433,5 @@ $("#closeMapModal").click(function () {
     $("#mapModal").fadeOut();
 });
 
-// UI stuff that needs doing: different color for hcp and need a height for empty fields in hcp and players
 // if doing the choose between radius or location search, use the :checked thingy to see which radio was selected when clicked
 // maybe want to add an info window on tee marker to show hole and yardage

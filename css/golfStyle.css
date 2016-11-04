@@ -30,7 +30,7 @@ body
 #mainContainer
 {
     width: 90%;
-    min-height: 60%;
+    min-height: 70%;
     margin: 0px auto;
     background-image: url("../images/hawaiiGolf2.jpg");
     background-size: cover;
@@ -79,9 +79,15 @@ body
     font-weight: bold;
 }
 
-#parValues, #hcpValues
+#parValues
 {
     background-color: rgba(125, 54, 45, 0.8);
+    color: aliceblue;
+}
+
+#hcpValues
+{
+    background-color: darkslateblue;
     color: aliceblue;
 }
 .tees
@@ -110,7 +116,7 @@ body
 #scoreCard
 {
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     min-height: 300px;
     background-color: white;
     box-sizing: border-box;
@@ -123,7 +129,7 @@ body
     margin-top: 20px;
     text-align: center;
 }
-#missingTeeType
+#missingTeeType, #missingCourseInfo
 {
     color: red;
     font-size: 30px;
@@ -172,7 +178,9 @@ body
 
 .nameInputField
 {
-    display: block;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 20px;
+
 }
 
 #btnDiv
@@ -224,6 +232,7 @@ body
 .playerBar
 {
     border: 1px solid black;
+    border-radius: 5px;
 }
 
 .invalidScore
@@ -360,6 +369,7 @@ button:active
     font-size: 15px;
     border-radius: 4px;
     padding-left: 5px;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 #newPlayerBtn
@@ -370,4 +380,71 @@ button:active
 #playerSubmitBtn
 {
     margin: 20px;
+}
+
+#courseSelectMenu
+{
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+#courseInfo
+{
+    background-color: rgba(100, 140, 60, 0.5);
+    overflow: hidden;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#courseLoc
+{
+    width: 50%;
+    float: right;
+    padding: 10px;
+    text-align: right;
+    font-size: 20px;
+    color: darkblue;
+    box-sizing: border-box;
+}
+
+#courseName
+{
+    font-size: 40px;
+    color: lightyellow;
+    text-shadow: 2px 2px 2px black;
+}
+
+#courseWeather
+{
+    margin: 10px 150px;
+    width: 150px;
+    float: left;
+    padding: 10px;
+    min-height: 150px;
+    background-color: rgba(0, 88, 179, 0.6);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+}
+
+#wind
+{
+    font-size: 15px;
+}
+
+.locationLabel
+{
+    font-size: 20px;
+    padding: 5px;
+}
+
+label
+{
+    margin-left: 10px;
 }

@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="public/thirdParty/jquery/dist/jquery.js"></script>
-    <script async defer src="js/startPage.js"></script>
+    <script async defer src="js/testJSON.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbJtG8Iq8wEWzXx50gvTg1Vv-O_RLQ8qg"></script>
 
 </head>
 <body>
-    <select id="courseSelectMenu">
-        <option disabled selected value> -- Select a Golf Course -- </option>
-    </select>
-    <button id="courseSelectBtn">Select Course</button>
+    <input id="radius" type="radio" name="courseSearch" value="radius" checked><label for="radius">Search within 50 miles</label>
+    <input id="location" type="radio" name="courseSearch" value="location"><label for="location">Search by location</label>
 </body>
 </html>
