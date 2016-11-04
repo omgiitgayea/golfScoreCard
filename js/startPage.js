@@ -78,7 +78,8 @@ function buildMenu(courses)
     for (var i = 0; i < courses.length; i++) {
         var courseName = courses[i].name;
         var city = courses[i].city;
-        var optionDiv = "<option value='" + courses[i].id + "'>" + courseName + ", " + city + "</option>";
+        var state = courses[i].state_or_province;
+        var optionDiv = "<option value='" + courses[i].id + "'>" + courseName + ", " + city + ", " + state + "</option>";
         $("#courseSelectMenu").append(optionDiv);
     }
 

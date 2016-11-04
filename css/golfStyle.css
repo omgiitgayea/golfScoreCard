@@ -18,19 +18,20 @@ body
     width: 90%;
     text-align: center;
     font-size: 30px;
-    color: white;
+    color: #3a8a9e;
     margin: 0px auto 20px auto;
     padding: 5px;
-    background-color: rgba(240, 140, 2, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 5px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
     font-family: 'Proza Libre', sans-serif;
     box-sizing: border-box;
+    text-shadow: 1px 1px 1px #000;
 }
 #mainContainer
 {
     width: 90%;
-    min-height: 70%;
+    min-height: 85%;
     margin: 0px auto;
     background-image: url("../images/hawaiiGolf2.jpg");
     background-size: cover;
@@ -41,6 +42,12 @@ body
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+}
+
+#courseSelectDiv
+{
+    width: 80%;
+    margin: 0 auto;
 }
 
 #loading
@@ -117,7 +124,7 @@ body
 {
     width: 100%;
     padding: 10px;
-    min-height: 300px;
+    min-height: 100px;
     background-color: white;
     box-sizing: border-box;
     border-radius: 5px;
@@ -243,7 +250,8 @@ body
 
 .scoreDisplay
 {
-    margin: 10px;
+    margin: 20px;
+    font-size: 18px;
 }
 
 #mapModal
@@ -327,7 +335,7 @@ body
 #courseMap
 {
     width: 100%;
-    height: 300px;
+    height: 500px;
 }
 
 button
@@ -388,7 +396,7 @@ button:active
     font-size: 20px;
     border-radius: 4px;
     margin-bottom: 20px;
-    padding: 5px;
+    padding: 10px;
 }
 
 #courseInfo
@@ -415,6 +423,7 @@ button:active
     font-size: 40px;
     color: lightyellow;
     text-shadow: 2px 2px 2px black;
+    margin-bottom: 10px;
 }
 
 #courseWeather
@@ -447,4 +456,9 @@ button:active
 label
 {
     margin-left: 10px;
+}
+
+option
+{
+    font-family: 'Josefin Sans', sans-serif;
 }

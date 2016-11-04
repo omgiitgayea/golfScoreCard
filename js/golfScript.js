@@ -213,8 +213,14 @@ $("#courseSelectBtn").click(function () {
 });
 
 function addPlayer(morePlayers) {
+    $("#missingCourseInfo").html("");
     $("#playerModal").fadeIn();
-    $("#modalContent").html("<div>Enter Player Names:</div>");
+    var titleText = "<div>Enter Player Name";
+    if (morePlayers > 1) {
+        titleText += "s"
+    }
+    titleText += "</div>";
+    $("#modalContent").html(titleText);
     for (var i = 0; i < morePlayers; i++) {
         var nameInput = "<div class='locationLabel'><input type='text' id='newPlayer" + i + "' class='nameInputField'></div>";
         $(".nameInputField").css("display", "block");
@@ -233,17 +239,19 @@ function addPlayer(morePlayers) {
         var compInputs = [];
         for (var i = 0; i < morePlayers; i++) {
             var playerInput = $("#newPlayer" + i);
-            if (playerInput.val() === null || $.trim(playerInput.val()) === "" || (players.indexOf(playerInput.val()) != -1 && players.length > 0)) {
+            if (playerInput.val() === null || $.trim(playerInput.val()) === "") {
                 valid = false;
                 playerInput.val("");
                 playerInput.css("border-color", "red");
                 playerInput.css("background-color", "pink");
+                $("#missingCourseInfo").html("Please fill out the fields");
             }
-            if (compInputs.indexOf(playerInput.val()) != -1 && compInputs.length > 0) {
+            if ((compInputs.indexOf(playerInput.val()) != -1 && compInputs.length > 0) || (players.indexOf(playerInput.val()) != -1 && players.length > 0)) {
                 valid = false;
                 playerInput.val("");
                 playerInput.css("border-color", "red");
                 playerInput.css("background-color", "pink");
+                $("#missingCourseInfo").html("Duplicate Player");
             }
             if (playerInput.val != "") {
                 compInputs.push(playerInput.val());
@@ -377,8 +385,19 @@ function addPlayer(morePlayers) {
                             endGameMsg = "It looks like Charles Barkley was on the course today..."
                         }
                         var playerName = $("#player" + playerID).children(".headers").html();
-                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of " + strokesPar + ". " + endGameMsg + "</div>";
+                        var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of <span id='strokeClr" + playerID + "'>" + strokesPar + "</span>. " + endGameMsg + "</div>";
+
                         $("#scoreCard").append(playerResult);
+
+                        $("#strokeClr" + playerID).css("text-shadow", "1px 1px 3px #555555");
+                        if(strokesPar <= 0)
+                        {
+                            $("#strokeClr" + playerID).css("color", "green");
+                        }
+                        else
+                        {
+                            $("#strokeClr" + playerID).css("color", "darkred");
+                        }
                     }
                 }
             }

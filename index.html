@@ -25,13 +25,15 @@
 
     <div id="mainContainer">
         <!--the main container will start out with the course selection and number of player selection-->
-        <select id="courseSelectMenu">
+        <div id="courseSelectDiv">
+            <select id="courseSelectMenu">
 
-        </select>
-        <span class="locationLabel">
-            <input id="radius" type="radio" name="courseSearch" value="radius" checked><label for="radius">Search within 50 miles</label>
-            <input id="location" type="radio" name="courseSearch" value="location"><label for="location">Search by location</label>
-        </span>
+            </select>
+            <span class="locationLabel">
+                <input id="radius" type="radio" name="courseSearch" value="radius" checked><label for="radius">Search within 50 miles</label>
+                <input id="location" type="radio" name="courseSearch" value="location"><label for="location">Search by location</label>
+            </span>
+        </div>
         <div id="courseInfo"></div>
         <div id="courseSelectBtncontainer">
             <button id="courseSelectBtn">Select Golf Course</button>
