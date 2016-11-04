@@ -327,7 +327,7 @@ function submitPlayers(morePlayers)
             var playerField = "<div id='player" + (i + addedPlayers) + "' class='playerBar'><div class='headers'>" + $('#newPlayer' + i).val() + "<span class='removePlayerBtn'><i class='fa fa-minus-circle'></i></span></div></div>";
             $("#scoreCard").append(playerField);
             for (var j = 0; j < courseData.course.holes.length; j++) {
-                var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "'type='text' class='scoreField'></div>";
+                var scoreDiv = "<div class='holeScore'><input id='player" + (i + addedPlayers) + "-" + j + "' type='text' class='scoreField'></div>";
                 $("#player" + (i + addedPlayers)).append(scoreDiv);
                 if (j % 9 === 8) {
                     var scoreTotalDiv = "<div id='player" + (i + addedPlayers) + "Total" + (j + 1) + "' class='yardage'>&nbsp;</div>";
