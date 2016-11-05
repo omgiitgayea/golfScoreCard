@@ -434,22 +434,22 @@ function updateScore()
                     var endGameMsg = "";
                     if (strokesPar <= -20)
                     {
-                        endGameMsg = "Watch out early 2000s Tiger Woods!"
+                        endGameMsg = " under par. Watch out early 2000s Tiger Woods!"
                     }
                     else if (strokesPar < 0)
                     {
-                        endGameMsg = "Yay, the happy side of par!"
+                        endGameMsg = " under par. Yay, the happy side of par!"
                     }
                     else if (strokesPar <= 10)
                     {
-                        endGameMsg = "Not too shabby!"
+                        endGameMsg = " over par. Not too shabby!"
                     }
                     else
                     {
-                        endGameMsg = "It looks like Charles Barkley was on the course today..."
+                        endGameMsg = " over par. It looks like Charles Barkley was on the course today..."
                     }
                     var playerName = $("#player" + playerID).children(".headers").html();
-                    var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of <span id='strokeClr" + playerID + "'>" + strokesPar + "</span>. " + endGameMsg + "</div>";
+                    var playerResult = "<div id='finalScore" + playerID + "' class='scoreDisplay'>" + playerName + " has a score of <span id='strokeClr" + playerID + "'>" + strokesPar + "</span>" + endGameMsg + "</div>";
 
                     $("#scoreCard").append(playerResult);
 
