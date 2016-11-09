@@ -11,6 +11,15 @@ function ScoringService()
         }
         return out;
     }
+
+    this.calculateInScore = function (scores) {
+        var inScore = 0;
+        for(var i = 9; i < scores.length; i++)
+        {
+            inScore += scores[i]
+        }
+        return inScore;
+    }
 }
 
 module.exports = ScoringService;

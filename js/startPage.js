@@ -76,10 +76,10 @@ function buildMenu(courses)
     $("#courseSelectMenu").html("<option disabled selected value> -- Select a Golf Course -- </option>");
 
     for (var i = 0; i < courses.length; i++) {
-        var courseName = courses[i].name;
-        var city = courses[i].city;
-        var state = courses[i].state_or_province;
-        var optionDiv = "<option value='" + courses[i].id + "'>" + courseName + ", " + city + ", " + state + "</option>";
+        var courseName = !courses[i].name ? "" : courses[i].name;
+        var city = !courses[i].city ? "" : courses[i].city;
+        var state = !courses[i].state_or_province ? "" : ", " +courses[i].state_or_province;
+        var optionDiv = "<option value='" + courses[i].id + "'>" + courseName + ", " + city + state + "</option>";
         $("#courseSelectMenu").append(optionDiv);
     }
 
@@ -98,14 +98,24 @@ function buildMenu(courses)
         var courseWeatherDiv = "<div id='courseWeather'></div>";
         $("#courseInfo").append(courseWeatherDiv);
         $("#courseInfo").append(courseLocDiv);
-        var courseNameDiv = "<div id='courseName'>" + currentCourse.name + "</div>";
-        var courseAddr1Div = "<div id='courseAddr1'>" + currentCourse.addr_1 + ", " + currentCourse.city + "</div>";
-        var courseAddr2Div = "<div id='courseAddr2'>" + currentCourse.state_or_province + ", " + currentCourse.country + "</div>";
-        var coursePhoneDiv = "<div id='coursePhone'>" + currentCourse.phone + "</div>";
-        var courseZipDiv = "<div id='courseZip'>" + currentCourse.zip_code + "</div>";
-        var courseMapDiv = "<div id='courseMap'></div>";
+        var courseNameDiv = !currentCourse.name ? "" : "<div id='courseName'>" + currentCourse.name + "</div>";
+        var courseAddr1Div = !currentCourse.addr_1 ? "" : "<div id='courseAddr1'>" + currentCourse.addr_1 + ", " + currentCourse.city + "</div>";
+        var courseAddr2Div = !currentCourse.state_or_province ? "" : "<div id='courseAddr2'>" + currentCourse.state_or_province + ", " + currentCourse.country + "</div>";
+        var coursePhoneDiv = !currentCourse.phone ? "" : "<div id='coursePhone'>" + currentCourse.phone + "</div>";
+        var courseZipDiv = !currentCourse.zip_code ? "" : "<div id='courseZip'>" + currentCourse.zip_code + "</div>";
+        var courseMapDiv =  "<div id='courseMap'></div>";
 
-        $("#courseLoc").append(courseNameDiv, courseAddr1Div, courseAddr2Div, coursePhoneDiv, courseZipDiv);
+        var websiteName = "";
+        if(currentCourse.website) {
+            if (currentCourse.website.search("http://") === -1) {
+                websiteName += "http://";
+            }
+            websiteName += currentCourse.website;
+        }
+
+        var courseSiteDiv = !currentCourse.website ? "" : "<div id='courseSite'><a href='" + websiteName + "' target='_blank'>" + websiteName + "</a></div>";
+
+        $("#courseLoc").append(courseNameDiv, courseAddr1Div, courseAddr2Div, coursePhoneDiv, courseZipDiv, courseSiteDiv);
         $("#courseInfo").append(courseMapDiv);
         initCourseMap(currentCourse.location);
         getWeather(currentCourse.location);
