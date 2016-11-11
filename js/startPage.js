@@ -52,7 +52,7 @@ function getGeolocation() {
 function getCoursesByRadius(positionObj) {
     var courses;
     return new Promise(function (resolve, reject) {
-        $.post("http://golf-courses-api.herokuapp.com/courses", {
+        $.post("https://golf-courses-api.herokuapp.com/courses", {
             latitude: positionObj.latitude,
             longitude: positionObj.longitude,
             radius: RADIUS
@@ -65,7 +65,7 @@ function getCoursesByRadius(positionObj) {
 function getCoursesByLocation(locationObj) {
     var courses;
     return new Promise(function (resolve, reject) {
-        $.post("http://golf-courses-api.herokuapp.com/courses/search", locationObj, function (data) {
+        $.post("https://golf-courses-api.herokuapp.com/courses/search", locationObj, function (data) {
             resolve(JSON.parse(data).courses)
         });
     })
@@ -233,8 +233,8 @@ function initCourseMap(coursePos) {
 function getWeather(coursePos)
 {
     $("#courseWeather").html("");
-    $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + coursePos.lat + "&lon=" + coursePos.lng + "&units=metric&APPID=" + API_KEY, function (weatherData) {
-        var iconSrc = "http://openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
+    $.getJSON("https://api.openweathermap.org/data/2.5/weather?lat=" + coursePos.lat + "&lon=" + coursePos.lng + "&units=metric&APPID=" + API_KEY, function (weatherData) {
+        var iconSrc = "https://openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
         var image = "<img src='" + iconSrc + "' width='100px'>";
         var tempDiv = "<div>" + weatherData.main.temp + " &deg;C</div>";
         var windDir = weatherData.wind.deg;
