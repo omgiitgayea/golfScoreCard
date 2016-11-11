@@ -233,8 +233,8 @@ function initCourseMap(coursePos) {
 function getWeather(coursePos)
 {
     $("#courseWeather").html("");
-    $.getJSON("https://api.openweathermap.org/data/2.5/weather?lat=" + coursePos.lat + "&lon=" + coursePos.lng + "&units=metric&APPID=" + API_KEY, function (weatherData) {
-        var iconSrc = "https://openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
+    $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + coursePos.lat + "&lon=" + coursePos.lng + "&units=metric&APPID=" + API_KEY, function (weatherData) {
+        var iconSrc = "http://openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png";
         var image = "<img src='" + iconSrc + "' width='100px'>";
         var tempDiv = "<div>" + weatherData.main.temp + " &deg;C</div>";
         var windDir = weatherData.wind.deg;
